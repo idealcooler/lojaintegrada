@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora de Precificação</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f8f9fa; padding: 20px; }
+    .container { max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+    h1 { text-align: center; font-size: 24px; margin-bottom: 20px; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-top: 5px; }
+    .resultado { background: #f1f3f5; padding: 15px; margin-top: 20px; border-radius: 8px; }
+    .resultado p { margin: 8px 0; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora de Precificação</h1>
+
+    <label>Custo do Produto</label>
+    <input type="number" id="custoProduto" />
+
+    <label>Margem ideal de lucro (%)</label>
+    <input type="number" id="margemLucro" />
+
+    <label>Tarifa cartão ou pix (%)</label>
+    <input type="number" id="tarifaPagamento" />
+
+    <label>Taxa fixa logística (R$)</label>
+    <input type="number" id="taxaLogistica" />
+
+    <label>Frete (R$)</label>
+    <input type="number" id="frete" />
+
+    <label>Impostos e tributações (%)</label>
+    <input type="number" id="impostos" />
+
+    <label>Comissão do vendedor (%)</label>
+    <input type="number" id="comissaoVendedor" />
+
+    <label>ROAS Google Ads (%)</label>
+    <input type="number" id="roas" />
+
+    <label>Despesas operacionais fixas (R$)</label>
+    <input type="number" id="despesasFixas" />
+
+    <label>Despesas com tráfego pago fixas (R$)</label>
+    <input type="number" id="despesasTrafego" />
+
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+  <script>
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach(input => input.addEventListener("input", calcular));
+
+    function calcular() {
+      const custoProduto = parseFloat(document.getElementById("custoProduto").value) || 0;
+      const margemLucro = parseFloat(document.getElementById("margemLucro").value) || 0;
+      const tarifaPagamento = parseFloat(document.getElementById("tarifaPagamento").value) || 0;
+      const taxaLogistica = parseFloat(document.getElementById("taxaLogistica").value) || 0;
+      const frete = parseFloat(document.getElementById("frete").value) || 0;
+      const impostos = parseFloat(document.getElementById("impostos").value) || 0;
+      const comissaoVendedor = parseFloat(document.getElementById("comissaoVendedor").value) || 0;
+      const roas = parseFloat(document.getElementById("roas").value) || 0;
+      const despesasFixas = parseFloat(document.getElementById("despesasFixas").value) || 0;
+      const despesasTrafego = parseFloat(document.getElementById("despesasTrafego").value) || 0;
+
+      const custoTotal = custoProduto + taxaLogistica + frete + despesasFixas + despesasTrafego;
+      const percentualExtra = (tarifaPagamento + impostos + comissaoVendedor + roas + margemLucro) / 100;
+      const precoFinal = custoTotal / (1 - percentualExtra);
+      const lucroLiquido = precoFinal - custoTotal;
+      const margemReal = (lucroLiquido / precoFinal) * 100;
+
+      document.getElementById("resultado").innerHTML = `
+        <p>Preço ideal de venda: R$ ${precoFinal.toFixed(2)}</p>
+        <p>Lucro líquido: R$ ${lucroLiquido.toFixed(2)}</p>
+        <p>Margem real: ${margemReal.toFixed(2)}%</p>
+      `;
+    }
+  </script>
+</body>
+</html>
